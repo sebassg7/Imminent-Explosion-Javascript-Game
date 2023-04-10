@@ -11,6 +11,7 @@ const btnDown = document.querySelector('#down');
 
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas.
+let level = 0; // Se  crea esta variable, que es el nivel que comienza desde cero.
 
 
 
@@ -57,7 +58,12 @@ function starGame(){
     // game.font =  "36px serif";
 
     
-    const map = maps[0];
+    const map = maps[level]; // Dentro de los corchetes se coloca level que ira variando a medida de que se aumente de nivel.
+
+    if(!map){ // Se crea este condicional, para dar a enteder que si despues de hacer coalision con el regalo y no hay mas mapas, se termine el juego, osea juego ganado.
+        gameWIn(); // Esta funcion anuncia que el juego se gano.
+        return; // Con este se dejar de ejecutar la funcion starGame, debido a que no hay mas niveles.
+    };
 
     const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
    
@@ -105,7 +111,7 @@ function movePLayer (){ // Función para que aparezca la calavera.
     const giftCollition = giftCoallitionX && giftCoallitionY; // Se crea esta constante que es el condicional abajo.
 
     if(giftCollition){ // Si la posicion de de Y para el regalo y el jugador (calavera), y la posicion X para el regalo y el jugador, coinciden, se cumple la COALICIÓN.
-        console.log('COALLITION!!!');
+        levelWin();
     };
 
     const enemyCoallition = enemyPositions.find(enemy => {
@@ -216,6 +222,17 @@ function movesKeyBoard (event){
     else if (event.key =="ArrowRight")moveRight();
     else if (event.key =="ArrowDown")moveDown();
 };
+
+function levelWin(){ // Se crea esta funcion para subir el valor del nivel, cada que se cambia el numero del nivel, vuelve y empieza el juego desde el otro nivel.
+    console.log('Pasaste de nivel!!');
+    level ++; // Aumentar la variable level arriba, de unidad en unidad.
+    starGame(); // Cada que se aumenta de nivel se ejecuta la funcion de empezar el juego.
+};
+
+function gameWIn(){ // Se ejecuta cuando se gana el juego, osea cuando no hay mas mapas.
+    console.log('Terminaste el Juego');
+};
+
 function moveUp(){ // Funciones para el movimiento de la calavera, en las direcciones deseadas.
    if(playerPosition.y - elementSize < 0){ // Con este condicional se busca teniendo en cuenta las coordenadas, que la calavera salga o no del canvas.
         console.log('OUT'); // Se debe tener en cuenta si suma o resta a la posicion del jugador, lo que se modifica son las coordenadas.
