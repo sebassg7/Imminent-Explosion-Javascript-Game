@@ -54,7 +54,7 @@ function starGame(){
    
     const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
      
-    game.clearRect(0,0,canvasSize,canvasSize); // Elimina todo el juego antes de reenderizar, que seria la siguiente funcion. ELIMINA y REENDERIZA.
+    game.clearRect(0,0,canvasSize,canvasSize); // Elimina todo el juego antes de reenderizar, que seria la siguiente funcion. ELIMINA y REENDERIZA. Cuando se llama a la funcion starGame();
     mapsRowsCols.forEach((row, rowI) => {  // LO que hacemos aque es con el forEach recorrer el array, se hace dos forEach porque son arrays bidimensionales.
         row.forEach( (col, colI) =>{
             
@@ -181,31 +181,59 @@ function movesKeyBoard (event){
     else if (event.key =="ArrowDown")moveDown();
 };
 function moveUp(){ // Funciones para el movimiento de la calavera, en las direcciones deseadas.
-    console.log(' Estoy presionando la tecla hacia arriba');
-    playerPosition.y -= elementSize; // Se modifica la posicion inicial en que se ubica la calavera.
+   if(playerPosition.y - elementSize < 0){ // Con este condicional se busca teniendo en cuenta las coordenadas, que la calavera salga o no del canvas.
+        console.log('OUT'); // Se debe tener en cuenta si suma o resta a la posicion del jugador, lo que modifica la coordenada.
+   }else{
+        playerPosition.y -= elementSize; // Se modifica la posicion inicial en que se ubica la calavera.
+        starGame(); // Colocando esta función, se ejecuta el juego, eliminando, renderizando y moviendo al jugador con movePlayer();
+   }
+   
+    // console.log(' Estoy presionando la tecla hacia arriba');
+    
     // movePLayer(); // Una vez se reenderiza el juego, vuelve a aparecer donde se realizo el movimiento.
-    starGame(); // Colocando esta función, se ejecuta el juego, eliminando, renderizando y moviendo al jugador con movePlayer();
+    
 };
 
 function moveLeft(){
-    console.log(' Estoy presionando la tecla hacia la izquierda');
-    playerPosition.x -= elementSize;
+    if(playerPosition.x - elementSize < 0){
+        console.log('OUT');
+   }else{
+        playerPosition.x -= elementSize;
+        starGame(); 
+   }
+    
+    // console.log(' Estoy presionando la tecla hacia la izquierda');
+    
     // movePLayer();
-    starGame();
+    
 };
 
 function moveRight(){
-    console.log(' Estoy presionando la tecla hacia la derecha');
-    playerPosition.x += elementSize;
+    if(playerPosition.x + elementSize > canvasSize - elementSize){
+        console.log('OUT');
+   }else{
+        playerPosition.x += elementSize;
+        starGame(); 
+   }
+    
+    // console.log(' Estoy presionando la tecla hacia la derecha');
+    
     // movePLayer();
-    starGame();
+    
 };
 
 function moveDown(){
-    console.log(' Estoy presionando la tecla hacia abajo');
+    if(playerPosition.y + elementSize > canvasSize ){
+        console.log('OUT');
+   }else{
     playerPosition.y += elementSize;
+        starGame(); 
+   }
+    
+    // console.log(' Estoy presionando la tecla hacia abajo');
+    
     // movePLayer();
-    starGame();
+    
 };
 
 
