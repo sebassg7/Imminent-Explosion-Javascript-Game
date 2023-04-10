@@ -12,6 +12,8 @@ const btnDown = document.querySelector('#down');
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas.
 
+
+
 const playerPosition = { // A pesar de que es la variable se define con const, esta puede ser moficiada cuando se modifican los elementos de un objeto, o se trabaja con un objeto.
     x: undefined,
     y: undefined,
@@ -21,6 +23,8 @@ const giftPosition = {
     x: undefined,
     y: undefined,
 };
+
+let enemyPositions = []; // Esta variable fue const, pero no puede serlo porque se va a cambiar el valor cada vez que se ejecute el juego por un array vacio.
 
 window.addEventListener('load',setCanvasSize); // Se ejecuta cada vez que cargamos el HTML.
 window.addEventListener('resize',setCanvasSize); // Evento para modificar el tamaño de nuestro canvas.
@@ -58,7 +62,8 @@ function starGame(){
     const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
    
     const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
-     
+    enemyPositions = []; // Esta se crear para reemplazar los nuevos valores de los objetos enemigos, que se llena siempre que el juego comienza una y otra vez.
+    // enemyPositions ahora tiene infomacion de un array y pasa a ubicarse arriba en la variable let con el mismo nombre (let enemyPositions = [];)
     game.clearRect(0,0,canvasSize,canvasSize); // Elimina todo el juego antes de reenderizar, que seria la siguiente funcion. ELIMINA y REENDERIZA. Cuando se llama a la funcion starGame();
     mapsRowsCols.forEach((row, rowI) => {  // LO que hacemos aque es con el forEach recorrer el array, se hace dos forEach porque son arrays bidimensionales.
         row.forEach( (col, colI) =>{
@@ -66,6 +71,7 @@ function starGame(){
             const colEmojis = emojis[col]; // Se selecciona los emojis dependiendo el elemento del estring que exista en la columna. EJ/ I = Regalo.
             const posX = elementSize * (colI ); // 1.15
             const posY = elementSize * (rowI + 0.9); // 0.9
+            
 
             if (col == 'O') {
                 if(!playerPosition.x &&  !playerPosition.y ){ // Este condicional hará que el jugador se mueva, si la coordenada x y y, tiene valor undefined, entrará como true, pero eso no pasará debido a que la calavera variara de posición.
@@ -78,7 +84,12 @@ function starGame(){
               }else if (col == 'I') { // Este condicional valida la posicion del regalo. Cuando 'O' llega a la posicion de 'I', este condicional funciona.
                     giftPosition.x = posX;
                     giftPosition.y = posY;
-            }; 
+            } else if (col == 'X') {
+                enemyPositions.push({ // Se ubica la posicion del enemigo, mediante objetos en un array vacio.
+                    x: posX,
+                    y: posY,
+                });
+            };
 
             game.fillText(colEmojis,posX,posY);
             // console.log({col,row, rowI, colI}) // Se recorre el array de filas(rows) y el de columnas (cols).
@@ -96,6 +107,16 @@ function movePLayer (){ // Función para que aparezca la calavera.
     if(giftCollition){ // Si la posicion de de Y para el regalo y el jugador (calavera), y la posicion X para el regalo y el jugador, coinciden, se cumple la COALICIÓN.
         console.log('COALLITION!!!');
     };
+
+    const enemyCoallition = enemyPositions.find(enemy => {
+        const enemyCoallitionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
+        const enemyCoallitionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
+        return  enemyCoallitionX && enemyCoallitionY;
+    });
+
+        if(enemyCoallition){
+            console.log('Colisionaste: perdiste :(')
+        };
     game.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y)
 };
 
