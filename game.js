@@ -54,7 +54,7 @@ function starGame(){
    
     const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
      
-
+    game.clearRect(0,0,canvasSize,canvasSize); // Elimina todo el juego antes de reenderizar, que seria la siguiente funcion. ELIMINA y REENDERIZA.
     mapsRowsCols.forEach((row, rowI) => {  // LO que hacemos aque es con el forEach recorrer el array, se hace dos forEach porque son arrays bidimensionales.
         row.forEach( (col, colI) =>{
             
@@ -63,22 +63,24 @@ function starGame(){
             const posY = elementSize * (rowI + 0.9); // 0.9
 
             if (col == 'O') {
-                playerPosition.x = posX;
-                playerPosition.y = posY;
-                console.log({playerPosition});
-
-                console.log({posX,posY});
-              }
+                if(!playerPosition.x &&  !playerPosition.y ){ // Este condicional hará que el jugador se mueva, si la coordenada x y y, tiene valor undefined, entrará como true, pero eso no pasará debido a que la calavera variara de posición.
+                    
+                    playerPosition.x = posX; // Esta parta se debe modificar, porque al reiniciar el juego, el jugador volveraá a su posicion inicial siempre.
+                    playerPosition.y = posY;
+                    console.log({playerPosition});
+                    console.log({posX,posY});
+                };              
+              };
 
             game.fillText(colEmojis,posX,posY);
             // console.log({col,row, rowI, colI}) // Se recorre el array de filas(rows) y el de columnas (cols).
         });
     });
 
-    movePLayer();
+    movePLayer(); // Cuando se reenderiza el juego, y se juega con el movimiento de la calavera, siempre va a aparecer la calavera con esta funcón.
 };
 
-function movePLayer (){
+function movePLayer (){ // Función para que aparezca la calavera.
     game.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y)
 };
 
@@ -178,22 +180,32 @@ function movesKeyBoard (event){
     else if (event.key =="ArrowRight")moveRight();
     else if (event.key =="ArrowDown")moveDown();
 };
-function moveUp(){
+function moveUp(){ // Funciones para el movimiento de la calavera, en las direcciones deseadas.
     console.log(' Estoy presionando la tecla hacia arriba');
-    playerPosition.y -= elementSize;
-    movePLayer();
+    playerPosition.y -= elementSize; // Se modifica la posicion inicial en que se ubica la calavera.
+    // movePLayer(); // Una vez se reenderiza el juego, vuelve a aparecer donde se realizo el movimiento.
+    starGame(); // Colocando esta función, se ejecuta el juego, eliminando, renderizando y moviendo al jugador con movePlayer();
 };
 
 function moveLeft(){
     console.log(' Estoy presionando la tecla hacia la izquierda');
+    playerPosition.x -= elementSize;
+    // movePLayer();
+    starGame();
 };
 
 function moveRight(){
     console.log(' Estoy presionando la tecla hacia la derecha');
+    playerPosition.x += elementSize;
+    // movePLayer();
+    starGame();
 };
 
 function moveDown(){
     console.log(' Estoy presionando la tecla hacia abajo');
+    playerPosition.y += elementSize;
+    // movePLayer();
+    starGame();
 };
 
 
