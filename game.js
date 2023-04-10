@@ -12,7 +12,12 @@ const btnDown = document.querySelector('#down');
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas.
 
-const playerPosition = {
+const playerPosition = { // A pesar de que es la variable se define con const, esta puede ser moficiada cuando se modifican los elementos de un objeto, o se trabaja con un objeto.
+    x: undefined,
+    y: undefined,
+};
+
+const giftPosition = {
     x: undefined,
     y: undefined,
 };
@@ -69,8 +74,11 @@ function starGame(){
                     playerPosition.y = posY;
                     console.log({playerPosition});
                     console.log({posX,posY});
-                };              
-              };
+                };             
+              }else if (col == 'I') { // Este condicional valida la posicion del regalo. Cuando 'O' llega a la posicion de 'I', este condicional funciona.
+                    giftPosition.x = posX;
+                    giftPosition.y = posY;
+            }; 
 
             game.fillText(colEmojis,posX,posY);
             // console.log({col,row, rowI, colI}) // Se recorre el array de filas(rows) y el de columnas (cols).
@@ -81,6 +89,13 @@ function starGame(){
 };
 
 function movePLayer (){ // Función para que aparezca la calavera.
+    const giftCoallitionX = giftPosition.x.toFixed(3) == playerPosition.x.toFixed(3); // Deben coincidir tanto en X, como en Y. El regalo no se mueve, por ende sus coordenadas quedaran fijas.
+    const giftCoallitionY = giftPosition.y.toFixed(3) == playerPosition.y.toFixed(3);
+    const giftCollition = giftCoallitionX && giftCoallitionY; // Se crea esta constante que es el condicional abajo.
+
+    if(giftCollition){ // Si la posicion de de Y para el regalo y el jugador (calavera), y la posicion X para el regalo y el jugador, coinciden, se cumple la COALICIÓN.
+        console.log('COALLITION!!!');
+    };
     game.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y)
 };
 
@@ -182,7 +197,7 @@ function movesKeyBoard (event){
 };
 function moveUp(){ // Funciones para el movimiento de la calavera, en las direcciones deseadas.
    if(playerPosition.y - elementSize < 0){ // Con este condicional se busca teniendo en cuenta las coordenadas, que la calavera salga o no del canvas.
-        console.log('OUT'); // Se debe tener en cuenta si suma o resta a la posicion del jugador, lo que modifica la coordenada.
+        console.log('OUT'); // Se debe tener en cuenta si suma o resta a la posicion del jugador, lo que se modifica son las coordenadas.
    }else{
         playerPosition.y -= elementSize; // Se modifica la posicion inicial en que se ubica la calavera.
         starGame(); // Colocando esta función, se ejecuta el juego, eliminando, renderizando y moviendo al jugador con movePlayer();
