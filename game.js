@@ -12,6 +12,11 @@ const btnDown = document.querySelector('#down');
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas.
 
+const playerPosition = {
+    x: undefined,
+    y: undefined,
+};
+
 window.addEventListener('load',setCanvasSize); // Se ejecuta cada vez que cargamos el HTML.
 window.addEventListener('resize',setCanvasSize); // Evento para modificar el tamaño de nuestro canvas.
 
@@ -19,8 +24,6 @@ window.addEventListener('resize',setCanvasSize); // Evento para modificar el tam
 
 function setCanvasSize (){
     
-    
-
     if(window.innerHeight > window.innerWidth){
      canvasSize = window.innerWidth * 0.8;
     }else{
@@ -38,32 +41,46 @@ function setCanvasSize (){
 };
 // FUNCIÓN NUMERO #1
 
-// function starGame(){
+function starGame(){
     
-    // game.font = elementSize + 'px Verdana'; // Le da el tamaño y el estilo al elemento, en este caso 'Verdana' tiene que ir alado de 'px'.
-    // game.textAlign = 'right' // Para que comience desde el punto deseado.
+    game.font = elementSize * 0.9 + 'px verdana';// Le da el tamaño y el estilo al elemento, en este caso 'Verdana' tiene que ir alado de 'px'.
+    // game.textAlign = 'end' // Para que comience desde el punto deseado.
     // game.font =  "36px serif";
 
     
-    // const map = maps[1];
+    const map = maps[0];
 
-    // const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
+    const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
    
-    // const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
+    const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
      
 
-    // mapsRowsCols.forEach((row, rowI) => {  // LO que hacemos aque es con el forEach recorrer el array, se hace dos forEach porque son arrays bidimensionales.
-    //     row.forEach( (col, colI) =>{
+    mapsRowsCols.forEach((row, rowI) => {  // LO que hacemos aque es con el forEach recorrer el array, se hace dos forEach porque son arrays bidimensionales.
+        row.forEach( (col, colI) =>{
             
-    //         const colEmojis = emojis[col]; // Se selecciona los emojis dependiendo el elemento del estring que exista en la columna. EJ/ I = Regalo.
-    //         const posX = elementSize * (colI + 1);
-    //         const posY = elementSize * (rowI + 1);
-    //         game.fillText(colEmojis,posX,posY);
-    //         console.log({col,row, rowI, colI}) // Se recorre el array de filas(rows) y el de columnas (cols).
-    //     });
-    // });
-    
-// };
+            const colEmojis = emojis[col]; // Se selecciona los emojis dependiendo el elemento del estring que exista en la columna. EJ/ I = Regalo.
+            const posX = elementSize * (colI ); // 1.15
+            const posY = elementSize * (rowI + 0.9); // 0.9
+
+            if (col == 'O') {
+                playerPosition.x = posX;
+                playerPosition.y = posY;
+                console.log({playerPosition});
+
+                console.log({posX,posY});
+              }
+
+            game.fillText(colEmojis,posX,posY);
+            // console.log({col,row, rowI, colI}) // Se recorre el array de filas(rows) y el de columnas (cols).
+        });
+    });
+
+    movePLayer();
+};
+
+function movePLayer (){
+    game.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y)
+};
 
 // FUNCIÓN NUMERO #2
 
@@ -120,27 +137,34 @@ function setCanvasSize (){
 //     };
 
 
-// FUNCIÓN NUMERO #4
+// FUNCIÓN NUMERO #4 == 'stanby'
 
-function starGame(){
-    
-    game.font = elementSize * 0.9 + 'px verdana'; // Le da el tamaño y el estilo al elemento, en este caso 'Verdana' tiene que ir alado de 'px'. El 0.9 lo utilizo para "separar" los iconos, pero lo que hace es disminuir el tamaño de ocupacio nde estos iconos.
-    // game.textAlign = 'right' // Para que comience desde el punto deseado.
-    
-    const map = maps[0];
 
-    const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
-    
-    const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
-        
-    
-    for (let row = 0.85; row <= 10; row++) { // EL 10, es el limite de la grilla de 10x10.
-        for (let col = 0.05; col < 10; col++) {
-            game.fillText(emojis[mapsRowsCols[Math.floor(row)][Math.floor(col)]], elementSize * col, elementSize * row);     // Es necesario coloca el Math.floor para aproximar los numeros a un valor entero, en este caso el menor, y que de esta manera la funcion funcione.
-        }    
-    } 
 
-};
+// function starGame(){
+    
+//     game.font = elementSize * 0.9 + 'px verdana'; // Le da el tamaño y el estilo al elemento, en este caso 'Verdana' tiene que ir alado de 'px'. El 0.9 lo utilizo para "separar" los iconos, pero lo que hace es disminuir el tamaño de ocupacio nde estos iconos.
+//     // game.textAlign = 'right' // Para que comience desde el punto deseado.
+    
+//     const map = maps[0];
+
+//     const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
+    
+//     const mapsRowsCols = mapsRows.map(row => row.trim().split('')); // La función map ayuda a crear arreglos a apartir de otros arreglos.
+    
+    
+
+//     for (let row = 0.85; row <= 10; row++) {// EL 10, es el limite de la grilla de 10x10.   
+//         for (let col = 0.05; col < 10; col++) {
+           
+//         const posX = elementSize * col;
+//         const posY = elementSize * row;
+//             game.fillText(emojis[mapsRowsCols[Math.floor(row)][Math.floor(col)]], posX, posY);     // Es necesario coloca el Math.floor para aproximar los numeros a un valor entero, en este caso el menor, y que de esta manera la funcion funcione.  
+//         }    
+//     }
+// };
+
+
 
 window.addEventListener('keydown',movesKeyBoard);
 btnUp.addEventListener('click', moveUp);
@@ -156,6 +180,8 @@ function movesKeyBoard (event){
 };
 function moveUp(){
     console.log(' Estoy presionando la tecla hacia arriba');
+    playerPosition.y -= elementSize;
+    movePLayer();
 };
 
 function moveLeft(){
