@@ -8,6 +8,7 @@ const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
+const spanLives = document.querySelector('#lives');
 
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas y define el tamaño de los emojis.
@@ -65,6 +66,8 @@ function starGame(){
         gameWIn(); // Esta funcion anuncia que el juego se gano.
         return; // Con este se dejar de ejecutar la funcion starGame, debido a que no hay mas niveles.
     };
+
+    totalLives();
 
     const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
    
@@ -243,9 +246,29 @@ function levelFail(){ // Cuando el jugador se encuentra en la misma posicion de 
        lives = 3; 
     };
 
+    
+
     playerPosition.x = undefined;
     playerPosition.y = undefined;
     starGame();
+};
+
+function totalLives(){
+    // spanLives.innerHTML = emojis['HEART'];
+
+    //SOLUCIÓN PROFESOR
+    // const setLives = Array(lives).fill(emojis['HEART']);
+
+    // spanLives.innerHTML = "";
+    // setLives.forEach(heart => { spanLives.append(heart)
+    // });
+
+    // MI SOLUCIÓN CON COMAS EN LOS CORAZONES
+    // const setLives = Array(lives).fill(emojis['HEART']);
+    // spanLives.innerText = setLives;
+
+    //SOLUCIÓN ALUMNO:
+    spanLives.innerHTML = emojis["HEART"].repeat(lives);
 };
 
 function moveUp(){ // Funciones para el movimiento de la calavera, en las direcciones deseadas.
