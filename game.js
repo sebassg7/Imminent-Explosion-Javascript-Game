@@ -9,11 +9,15 @@ const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 const spanLives = document.querySelector('#lives');
+const spanTime = document.querySelector('#time');
 
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas y define el tamaño de los emojis.
 let level = 0; // Se  crea esta variable, que es el nivel que comienza desde cero.
 let lives = 3; // Se crea esta variable para contabilizar el número vidas.
+let starTime; // Variable que guarda el inicio del tiempo.
+let timeInterval; // Albergará el valor del tiempo recorrido desde el inicio del juego.
+
 
 
 
@@ -68,6 +72,12 @@ function starGame(){
     };
 
     totalLives();
+
+    if(!starTime){ // La condicional se rige preguntando si estarTime esta o no definida aun.
+        starTime = Date.now(); // Si el starTime esta definido comienza a contar. Como esta dentro de la función starTime, cuando empieza el juego, se activa el tiempo.
+        timeInterval = setInterval(intervalTime,100); // Activa el reloj, le da movimiento al tiempo. El contador se mueve y activa la función definida abajo que da la resta del tiempo de inicio y el tiempo actual.
+
+    }
 
     const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
    
@@ -235,6 +245,8 @@ function levelWin(){ // Se crea esta funcion para subir el valor del nivel, cada
 
 function gameWIn(){ // Se ejecuta cuando se gana el juego, osea cuando no hay mas mapas.
     console.log('Terminaste el Juego');
+    clearInterval(timeInterval); // Cuando se llega al nivel final, se detiene el tiempo.
+
 };
 
 function levelFail(){ // Cuando el jugador se encuentra en la misma posicion de la bomba se crea la siguiente función.
@@ -244,6 +256,7 @@ function levelFail(){ // Cuando el jugador se encuentra en la misma posicion de 
     if(lives <= 0){ // Cuando las vidas llegan a cero se ejecuta este condicional, que le otroga al jugador 3 nuevas vidas, pero lo devuelve al nivel 0.
        level = 0;
        lives = 3; 
+       starTime = undefined; // Cuando se pierden las 3 vida, el tiempo se vuelve indefinido por lo que empieza a contar el relog.
     };
 
     
@@ -251,6 +264,10 @@ function levelFail(){ // Cuando el jugador se encuentra en la misma posicion de 
     playerPosition.x = undefined;
     playerPosition.y = undefined;
     starGame();
+};
+
+function intervalTime(){
+    spanTime.innerHTML = Date.now() - starTime; // Muestrá en el HTML la resta de tiempo actual y el tiempo desde que se comenzó el juego.
 };
 
 function totalLives(){
