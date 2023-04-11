@@ -10,8 +10,9 @@ const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 
 let canvasSize;
-let elementSize; // Con este código las bombas entran mejor en el canvas.
+let elementSize; // Con este código las bombas entran mejor en el canvas y define el tamaño de los emojis.
 let level = 0; // Se  crea esta variable, que es el nivel que comienza desde cero.
+let lives = 3; // Se crea esta variable para contabilizar el número vidas.
 
 
 
@@ -74,7 +75,7 @@ function starGame(){
     mapsRowsCols.forEach((row, rowI) => {  // LO que hacemos aque es con el forEach recorrer el array, se hace dos forEach porque son arrays bidimensionales.
         row.forEach( (col, colI) =>{
             
-            const colEmojis = emojis[col]; // Se selecciona los emojis dependiendo el elemento del estring que exista en la columna. EJ/ I = Regalo.
+            const colEmojis = emojis[col]; // Se selecciona los emojis dependiendo el elemento del string que exista en la columna. EJ/ I = Regalo.
             const posX = elementSize * (colI ); // 1.15
             const posY = elementSize * (rowI + 0.9); // 0.9
             
@@ -82,7 +83,7 @@ function starGame(){
             if (col == 'O') {
                 if(!playerPosition.x &&  !playerPosition.y ){ // Este condicional hará que el jugador se mueva, si la coordenada x y y, tiene valor undefined, entrará como true, pero eso no pasará debido a que la calavera variara de posición.
                     
-                    playerPosition.x = posX; // Esta parta se debe modificar, porque al reiniciar el juego, el jugador volveraá a su posicion inicial siempre.
+                    playerPosition.x = posX; // Esta parte se debe modificar, porque al reiniciar el juego, el jugador volveraá a su posicion inicial siempre.
                     playerPosition.y = posY;
                     console.log({playerPosition});
                     console.log({posX,posY});
@@ -114,15 +115,15 @@ function movePLayer (){ // Función para que aparezca la calavera.
         levelWin();
     };
 
-    const enemyCoallition = enemyPositions.find(enemy => {
+    const enemyCoallition = enemyPositions.find(enemy => { // Función find cuando la bomba y el jugador estan en la misma posición, para luego crear el condicional que tiene a la función, que determinará la coalision.
         const enemyCoallitionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
         const enemyCoallitionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
         return  enemyCoallitionX && enemyCoallitionY;
     });
 
-        if(enemyCoallition){
-            console.log('Colisionaste: perdiste :(')
-        };
+    if(enemyCoallition){ // Condicional que activa una función levelFail(), cuando nos estrellamos con una bomba
+            levelFail();           
+    };
     game.fillText(emojis['PLAYER'],playerPosition.x,playerPosition.y)
 };
 
@@ -231,6 +232,20 @@ function levelWin(){ // Se crea esta funcion para subir el valor del nivel, cada
 
 function gameWIn(){ // Se ejecuta cuando se gana el juego, osea cuando no hay mas mapas.
     console.log('Terminaste el Juego');
+};
+
+function levelFail(){ // Cuando el jugador se encuentra en la misma posicion de la bomba se crea la siguiente función.
+    console.log('Colisionaste: perdiste :(');
+    lives--; // Resta la cantidad de vida cada vez que se ejecuta esta función.
+    console.log(lives);
+    if(lives <= 0){ // Cuando las vidas llegan a cero se ejecuta este condicional, que le otroga al jugador 3 nuevas vidas, pero lo devuelve al nivel 0.
+       level = 0;
+       lives = 3; 
+    };
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    starGame();
 };
 
 function moveUp(){ // Funciones para el movimiento de la calavera, en las direcciones deseadas.
