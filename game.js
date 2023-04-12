@@ -10,6 +10,8 @@ const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
+const spanRecord = document.querySelector('#record');
+const pResult = document.querySelector('#result');
 
 let canvasSize;
 let elementSize; // Con este código las bombas entran mejor en el canvas y define el tamaño de los emojis.
@@ -53,6 +55,11 @@ function setCanvasSize (){
 
     elementSize = (canvasSize / 10)-1;
 
+    // canvasSize = Number(canvasSize.toFixed(0));
+    // console.log(canvasSize)
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
     starGame();
 };
 // FUNCIÓN NUMERO #1
@@ -77,6 +84,7 @@ function starGame(){
         starTime = Date.now(); // Si el starTime esta definido comienza a contar. Como esta dentro de la función starTime, cuando empieza el juego, se activa el tiempo.
         timeInterval = setInterval(intervalTime,100); // Activa el reloj, le da movimiento al tiempo. El contador se mueve y activa la función definida abajo que da la resta del tiempo de inicio y el tiempo actual.
 
+        showRecord();
     }
 
     const mapsRows = map.trim().split('\n'); // La funcion trim( funciona unicamente con 'strings') limpia los elementos de espacios al principio y al final. La funcion split vuelve en este caso elementos a las filas de un array.
@@ -247,6 +255,26 @@ function gameWIn(){ // Se ejecuta cuando se gana el juego, osea cuando no hay ma
     console.log('Terminaste el Juego');
     clearInterval(timeInterval); // Cuando se llega al nivel final, se detiene el tiempo.
 
+    const recordTime = localStorage.getItem('record_time');
+    const playerTime = Date.now() - starTime;
+
+    if(recordTime){
+        if(recordTime >= playerTime ){
+            localStorage.setItem('record_time', playerTime);
+            pResult.innerHTML = 'SUPERASTE EL RECORD !!!';
+        } else {
+            pResult.innerHTML = 'Lo siento, NO superaste el record';
+        }
+    } else {
+        localStorage.setItem('record_time', playerTime);
+        pResult.innerHTML = 'Es tu primera vez? Mucha suerte!!!';
+    };
+
+    console.log({recordTime,playerTime});
+};
+
+function showRecord(){
+    spanRecord.innerHTML = localStorage.getItem('record_time'); // Se puede llamar a record_time desde este punto debido a que el record esta guardado en el local storage del navegador, entonces ese valor ya se define con las anteriores funciones.
 };
 
 function levelFail(){ // Cuando el jugador se encuentra en la misma posicion de la bomba se crea la siguiente función.
